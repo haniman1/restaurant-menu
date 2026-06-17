@@ -2,19 +2,25 @@ import StatusBadge from "./StatusBadge";
 
 function FoodCard({ food }) {
   return (
-    <div className="bg-slate-800 rounded-xl overflow-hidden shadow-lg">
+    <div className="food-card bg-slate-900 rounded-xl overflow-hidden shadow-lg hover:scale-105 hover:shadow-yellow-500/20 transition-all duration-300">
       <img
         src={food.image}
         alt={food.name}
-        className="w-full h-56 object-cover"
+        className="w-full h-44 object-cover"
       />
 
-      <div className="p-4">
-        <h3 className="text-xl font-semibold">{food.name}</h3>
+      <div className="p-3">
+        {/* Name + Price */}
+        <div className="flex justify-between items-center">
+          <h3 className="text-lg font-semibold truncate">{food.name}</h3>
 
-        <p className="text-yellow-400 font-bold mt-2">{food.price} ETB</p>
+          <span className="text-yellow-400 font-bold text-sm ml-2">
+            {food.price} ETB
+          </span>
+        </div>
 
-        <div className="mt-3">
+        {/* Status */}
+        <div className="mt-2">
           <StatusBadge status={food.status} />
         </div>
       </div>
