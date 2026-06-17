@@ -98,7 +98,7 @@ function Menu() {
       </div>
 
       {/* FOOD CARDS */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 px-4 sm:px-6 pb-20">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5 px-4 sm:px-6 pb-20">
         {filteredFoods.map((food) => (
           <div
             key={food._id}
@@ -110,7 +110,7 @@ function Menu() {
             className="group bg-slate-900 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:shadow-yellow-500/20 [transform-style:preserve-3d] will-change-transform active:scale-95"
           >
             {/* IMAGE */}
-            <div className="relative overflow-hidden aspect-[4/3]">
+            <div className="relative overflow-hidden w-full aspect-[4/3]">
               <img
                 src={food.image}
                 alt={food.name}
@@ -122,7 +122,7 @@ function Menu() {
             </div>
 
             {/* DETAILS (COMPRESSED: name + price + status + category) */}
-            <div className="px-2.5 py-2">
+            <div className="px-3 py-2 md:px-2.5">
               <div className="flex justify-between items-baseline gap-1.5">
                 <h3 className="text-sm sm:text-base font-semibold truncate">
                   {food.name}
