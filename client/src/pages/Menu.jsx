@@ -38,6 +38,22 @@ function Menu() {
       ? foods
       : foods.filter((food) => food.category?.name === selectedCategory);
 
+  // 3D TILT HANDLERS (for product card animation)
+  const handleTiltMove = (e) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const rotateY =
+      ((e.clientX - rect.left - rect.width / 2) / (rect.width / 2)) * 10;
+    const rotateX =
+      ((e.clientY - rect.top - rect.height / 2) / (rect.height / 2)) * -10;
+    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04,1.04,1.04)`;
+  };
+
+  const handleTiltLeave = (e) => {
+    e.currentTarget.style.transform =
+      "perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <Navbar />
@@ -82,54 +98,65 @@ function Menu() {
       </div>
 
       {/* FOOD CARDS */}
-      <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-5 px-6 pb-20">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 px-4 sm:px-6 pb-20">
         {filteredFoods.map((food) => (
           <div
             key={food._id}
-            className="bg-slate-900 rounded-xl overflow-hidden shadow-lg hover:scale-105 hover:shadow-yellow-500/20 transition-all duration-300"
+            onMouseMove={handleTiltMove}
+            onMouseLeave={handleTiltLeave}
+            style={{
+              transition: "transform 0.15s ease-out, box-shadow 0.3s ease",
+            }}
+            className="group bg-slate-900 rounded-2xl overflow-hidden shadow-lg shadow-black/40 hover:shadow-yellow-500/20 [transform-style:preserve-3d] will-change-transform active:scale-95"
           >
             {/* IMAGE */}
-            <div className="overflow-hidden">
+            <div className="relative overflow-hidden aspect-[4/3]">
               <img
                 src={food.image}
                 alt={food.name}
                 onClick={() => setSelectedImage(food.image)}
-                className="h-52 w-full object-cover cursor-pointer hover:scale-110 transition-transform duration-500"
+                className="absolute inset-0 h-full w-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-110"
               />
+              {/* glossy sweep highlight for the 3D feel */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             </div>
 
-            {/* DETAILS (COMPACT) */}
-            <div className="p-2">
-              {/* NAME + PRICE SAME LINE */}
-              <div className="flex justify-between items-center gap-1">
-                <h3 className="text-base font-semibold truncate">
+            {/* DETAILS (COMPRESSED: name + price + status + category) */}
+            <div className="px-2.5 py-2">
+              <div className="flex justify-between items-baseline gap-1.5">
+                <h3 className="text-sm sm:text-base font-semibold truncate">
                   {food.name}
                 </h3>
 
-                <span className="text-yellow-400 font-semibold text-sm whitespace-nowrap">
+                <span className="text-yellow-400 font-bold text-xs sm:text-sm whitespace-nowrap">
                   {food.price} ETB
                 </span>
               </div>
 
-              {/* STATUS (SMALL) */}
-              <p
-                className={`text-xs mt-2 ${
-                  food.status === "available"
-                    ? "text-green-400"
-                    : "text-red-400"
-                }`}
-              >
-                {food.status}
-              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <span
+                  className={`inline-flex items-center gap-1 text-[11px] font-medium ${
+                    food.status === "available"
+                      ? "text-green-400"
+                      : "text-red-400"
+                  }`}
+                >
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${
+                      food.status === "available"
+                        ? "bg-green-400"
+                        : "bg-red-400"
+                    }`}
+                  />
+                  {food.status}
+                </span>
 
-              {/* CATEGORY */}
-              {food.category?.name && (
-                <div className="mt-2">
-                  <span className="bg-slate-800 px-2 py-1 rounded-full text-xs">
+                {food.category?.name && (
+                  <span className="bg-slate-800 px-2 py-0.5 rounded-full text-[11px] text-slate-300 truncate">
                     {food.category.name}
                   </span>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         ))}
