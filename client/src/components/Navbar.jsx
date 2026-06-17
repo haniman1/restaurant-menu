@@ -1,65 +1,80 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 bg-slate-950/95 backdrop-blur-md border-b border-yellow-500/20">
+    <nav className="sticky top-0 z-50 bg-slate-950 backdrop-blur-md border-b border-yellow-500/30">
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
         {/* LOGO */}
         <Link to="/" onClick={() => setOpen(false)}>
-          <h1 className="text-3xl font-extrabold tracking-wider text-yellow-400">
+          <h1 className="text-3xl font-extrabold tracking-wider text-yellow-400 hover:text-yellow-300 transition">
             RESTAURANT
           </h1>
         </Link>
 
         {/* DESKTOP MENU */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-10">
           <Link
             to="/"
-            className="text-lg font-semibold text-white hover:text-yellow-400 transition"
+            className="text-white hover:text-yellow-400 transition font-semibold"
           >
             Menu
           </Link>
 
           <Link
             to="/about"
-            className="text-lg font-semibold text-white hover:text-yellow-400 transition"
+            className="text-white hover:text-yellow-400 transition font-semibold"
           >
             About
           </Link>
         </div>
 
-        {/* HAMBURGER BUTTON */}
+        {/* HAMBURGER */}
         <button
-          className="md:hidden text-yellow-400 text-3xl"
           onClick={() => setOpen(!open)}
+          className="md:hidden text-yellow-400 text-3xl"
         >
           {open ? "✕" : "☰"}
         </button>
       </div>
 
       {/* MOBILE MENU */}
-      {open && (
-        <div className="md:hidden bg-slate-900 border-t border-yellow-500/20 px-6 py-4 flex flex-col gap-4 animate-fade-in">
-          <Link
-            to="/"
-            onClick={() => setOpen(false)}
-            className="text-white text-lg hover:text-yellow-400"
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="md:hidden overflow-hidden bg-slate-950 border-t border-yellow-500/20"
           >
-            Menu
-          </Link>
+            <div className="flex flex-col px-6 py-5 gap-5">
+              <motion.div initial={{ x: -20 }} animate={{ x: 0 }}>
+                <Link
+                  to="/"
+                  onClick={() => setOpen(false)}
+                  className="text-white hover:text-yellow-400 transition text-lg"
+                >
+                  Menu
+                </Link>
+              </motion.div>
 
-          <Link
-            to="/about"
-            onClick={() => setOpen(false)}
-            className="text-white text-lg hover:text-yellow-400"
-          >
-            About
-          </Link>
-        </div>
-      )}
+              <motion.div initial={{ x: -20 }} animate={{ x: 0 }}>
+                <Link
+                  to="/about"
+                  onClick={() => setOpen(false)}
+                  className="text-white hover:text-yellow-400 transition text-lg"
+                >
+                  About
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }
