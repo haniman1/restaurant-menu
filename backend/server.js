@@ -8,6 +8,7 @@ import { connectDB } from "./config/db.js";
 import foodRoutes from "./routes/foodRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+
 const app = express();
 
 // middleware
