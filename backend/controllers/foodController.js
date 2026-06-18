@@ -51,8 +51,6 @@ export const updateFood = async (req, res) => {
   try {
     const { id } = req.params;
 
-    console.log("BODY RECEIVED:", req.body); // 🔥 CHECK THIS
-
     const updateData = {
       name: req.body.name,
       price: Number(req.body.price),
