@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://restaurant-menu-1-ayrc.onrender.com/api",
+  baseURL: "http://localhost:5000/api",
 });
 
 // ADD TOKEN AUTOMATICALLY
