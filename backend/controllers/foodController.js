@@ -4,15 +4,13 @@ import cloudinary from "../config/cloudinary.js";
 // ================= CREATE FOOD =================
 export const createFood = async (req, res) => {
   try {
-    const { name, price, status, category } = req.body;
+    const { name, price, status, category, description } = req.body;
 
     if (!name || !price || !category) {
       return res.status(400).json({ message: "Missing fields" });
     }
 
     let imageUrl = "";
-
-    console.log("FILE:", req.file); // DEBUG
 
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path, {
@@ -24,6 +22,7 @@ export const createFood = async (req, res) => {
 
     const food = await Food.create({
       name,
+      description,
       price: Number(price),
       status,
       category,
@@ -33,11 +32,7 @@ export const createFood = async (req, res) => {
     res.status(201).json(food);
   } catch (error) {
     console.error("CREATE FOOD ERROR:", error);
-
-    res.status(500).json({
-      message: error.message,
-      error: String(error),
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -55,36 +50,34 @@ export const getFoods = async (req, res) => {
 export const updateFood = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, status, category } = req.body;
 
-    let updatedData = {
-      name,
-      price,
-      status,
-      category,
+    console.log("BODY RECEIVED:", req.body); // 🔥 CHECK THIS
+
+    const updateData = {
+      name: req.body.name,
+      price: Number(req.body.price),
+      status: req.body.status,
+      category: req.body.category,
+      description: req.body.description || "", // 🔥 IMPORTANT FIX
     };
 
-    // If new image uploaded → replace old one
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path, {
         folder: "restaurant-foods",
       });
 
-      updatedData.image = result.secure_url;
+      updateData.image = result.secure_url;
     }
 
-    const food = await Food.findByIdAndUpdate(id, updatedData, {
+    const food = await Food.findByIdAndUpdate(id, updateData, {
       new: true,
+      runValidators: true, // 🔥 IMPORTANT
     });
 
     res.json(food);
-  } catch (error) {
-    console.error("UPDATE FOOD ERROR:", error);
-
-    res.status(500).json({
-      message: error.message,
-      error: String(error),
-    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
   }
 };
 

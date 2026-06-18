@@ -15,7 +15,7 @@ router.get("/", getFoods);
 // protected + image upload
 router.post("/", protect, upload.single("image"), createFood);
 
-router.put("/:id", protect, updateFood);
+router.put("/:id", protect, upload.single("image"), updateFood);
 router.delete("/:id", protect, deleteFood);
 
 export default router;

@@ -15,6 +15,8 @@ function Dashboard() {
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
 
+  const [foodDescription, setFoodDescription] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [editingFood, setEditingFood] = useState(null);
 
@@ -91,6 +93,7 @@ function Dashboard() {
       formData.append("price", Number(price));
       formData.append("status", status);
       formData.append("category", category);
+      formData.append("description", foodDescription); // ✅ FIX
 
       if (image) formData.append("image", image);
 
@@ -114,9 +117,7 @@ function Dashboard() {
 
     try {
       await api.delete(`/foods/${id}`);
-
       setFoods((prev) => prev.filter((f) => f._id !== id));
-
       toast.success("Food deleted");
     } catch (err) {
       toast.error("Delete failed");
@@ -128,9 +129,11 @@ function Dashboard() {
     setEditingFood(food);
 
     setFoodName(food.name);
+    setFoodDescription(food.description || ""); // ✅ FIX
     setPrice(food.price);
     setStatus(food.status);
     setCategory(food.category?._id || food.category);
+    setImage(null); // 🔥 important reset
   };
 
   // ================= UPDATE FOOD =================
@@ -145,6 +148,7 @@ function Dashboard() {
       formData.append("price", Number(price));
       formData.append("status", status);
       formData.append("category", category);
+      formData.append("description", foodDescription || ""); // 🔥 force safe value
 
       if (image) formData.append("image", image);
 
@@ -155,7 +159,6 @@ function Dashboard() {
       );
 
       resetForm();
-
       toast.success("Food updated");
     } catch (err) {
       toast.error("Update failed");
@@ -167,12 +170,12 @@ function Dashboard() {
   // ================= RESET =================
   const resetForm = () => {
     setFoodName("");
+    setFoodDescription(""); // correct
     setPrice("");
     setStatus("available");
     setImage(null);
     setEditingFood(null);
   };
-
   // ================= UI =================
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6">
@@ -223,6 +226,13 @@ function Dashboard() {
             onChange={(e) => setFoodName(e.target.value)}
             className="p-3 w-full bg-slate-700 rounded"
             placeholder="Food Name"
+          />
+
+          <textarea
+            value={foodDescription}
+            onChange={(e) => setFoodDescription(e.target.value)}
+            className="p-3 w-full bg-slate-700 rounded"
+            placeholder="Food Description"
           />
 
           <input
@@ -286,6 +296,12 @@ function Dashboard() {
               <h3 className="font-bold">{food.name}</h3>
               <p>{food.price} ETB</p>
               <p>{food.status}</p>
+
+              {food.description && (
+                <p className="text-slate-300 text-sm mt-2">
+                  {food.description}
+                </p>
+              )}
 
               <div className="flex gap-2 mt-3">
                 <button
