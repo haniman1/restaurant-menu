@@ -1,26 +1,22 @@
 import Admin from "../models/Admin.js";
-import bcrypt from "bcryptjs";
+
 import jwt from "jsonwebtoken";
 
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 1. FIND ADMIN
     const admin = await Admin.findOne({ email });
 
     if (!admin) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // 2. COMPARE PASSWORD (bcrypt version)
-    const isMatch = await bcrypt.compare(password, admin.password);
-
-    if (!isMatch) {
+    // 2. COMPARE PASSWORD (plain text)
+    if (password !== admin.password) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    // 3. CREATE TOKEN (include role)
     const token = jwt.sign(
       {
         id: admin._id,
@@ -36,7 +32,6 @@ export const login = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 export const logout = async (req, res) => {
   try {
     // JWT is stateless → no server session to destroy
