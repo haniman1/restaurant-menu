@@ -73,17 +73,17 @@ function Footer() {
   const socialLinks = [
     {
       label: "Facebook",
-      href: social.facebook || "#",
+      href: social.facebook || "",
       icon: FaFacebookF,
     },
     {
       label: "Instagram",
-      href: social.instagram || "#",
+      href: social.instagram || `https://www.instagram.com/hanie_labate?igsh=NXc5ZnhqcjdrNnM5`,
       icon: FaInstagram,
     },
     {
       label: "Telegram",
-      href: social.telegram || "#",
+      href: social.telegram || `t.me/Be0944`,
       icon: FaTelegramPlane,
     },
     {
