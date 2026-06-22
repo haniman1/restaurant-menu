@@ -78,7 +78,7 @@ function Footer() {
     },
     {
       label: "Instagram",
-      href: social.instagram || `https://www.instagram.com/hanie_labate?igsh=NXc5ZnhqcjdrNnM5`,
+      href: `https://instagram.com/$hanie_labate.replace(/[^a-zA-Z0-9._]/g, "")}`
       icon: FaInstagram,
     },
     {
